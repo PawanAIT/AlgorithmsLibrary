@@ -15,41 +15,42 @@ int main()
 		scanf("%d",&n);
 		for (int i = 1; i <=n; ++i)
 			scanf("%d",&arr[i]);
-		scanf("%d",&sizze);
+		scanf("%d",&sizze); // cache size (Maximum Number of Pages that can be accommodated)
 		int pagefault=0;
 		set<int> s;
 		for (int i = 1; i <=n; ++i)
 		{
-			if (s.size() < sizze)
+			if (s.size() < sizze) // push until our cache size if Full !
 			{
-				if(Hash[arr[i]]==0)
+				if(Hash[arr[i]]==0)//Dont have this page in our cache
 					{
-						s.insert(i);
+						s.insert(i); // insert it in our cache
 						pagefault++;
 					}
 				else
-				{
-					s.erase(s.find(Hash[arr[i]]));
+				{ 	//update the previous page
+					s.erase(s.find(Hash[arr[i]])); 
 					s.insert(i);
 				}
-				Hash[arr[i]]=i;
+				Hash[arr[i]]=i; // mark the page with index
 			}
 			else
 			{
 				if (Hash[arr[i]])
 				{
+					//update the previous page
 					s.erase(s.find(Hash[arr[i]]));
 					s.insert(i);
 					Hash[arr[i]]=i;
 				}
 				else
-				{
+				{	//cant find this page hence pagefault
 					pagefault++;
-					int idx = *s.begin();
+					int idx = *s.begin();//get the least recent used page as set.begin() will have least value !
 					s.erase(s.begin());
 					s.insert(i);
-					Hash[arr[idx]]=0;
-					Hash[arr[i]]=i;
+					Hash[arr[idx]]=0; // remove that page
+					Hash[arr[i]]=i;  //make new page
 				}
 			}
 		}
