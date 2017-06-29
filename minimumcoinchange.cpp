@@ -13,7 +13,6 @@ int main()
 		scanf("%d %d",&n,&sum);
 		for (int i = 0; i < n; ++i)
 			scanf("%d",&cost[i]);
-		memset(dp,0,sizeof(dp));
 		for (int i = 1; i < N; ++i)
 			dp[0][i]=INT_MAX-500;
 		
