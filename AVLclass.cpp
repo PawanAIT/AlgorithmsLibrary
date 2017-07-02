@@ -133,7 +133,7 @@ private:
                 root->data = temp->data;
                 root->right = _delete(root->right,temp->data);
             }
-            return root;
+           
         }
         if (root==NULL)
         {
