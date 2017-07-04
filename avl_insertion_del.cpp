@@ -157,7 +157,7 @@ node *Delete(node *root,int key)
 			root->data = temp->data;
 			root->right = Delete(root->right,temp->data);
 		}
-		return root;
+		
 	}
 	if (root==NULL)
 	{
