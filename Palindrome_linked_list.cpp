@@ -49,7 +49,7 @@ bool check(node *root){
     slow = slow -> next;
   }
     node *head2 = NULL;
-    if(fast != NULL){ // even
+    if(fast != NULL){ // odd
           head2 = slow -> next;
           slow -> next = NULL; 
     }
