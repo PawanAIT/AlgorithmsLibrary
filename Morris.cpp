@@ -30,9 +30,10 @@ int Morris(node *root){
                   p = p -> right;
               if(p -> right == cur){
                 p -> right = NULL;
-                 cout << cur -> data << " ";
+                 cout << cur -> data << " "; // Inorder
                 cur = cur -> right;
               }else{
+                  //cout << cur -> data << " "; // Preorder
                   p -> right = cur ;
                   cur = cur -> left;
               }
