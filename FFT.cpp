@@ -68,7 +68,7 @@ int  main(){
            multiply(alpha , beta , ans);        
            multiply(ans , gamma , ans);
             long long res = 0;
-         for(long long  i = 0; i <= min(n, a + b + c) ;i++)
+         for(long long  i = 0; i <= min(n, a + b + c) ;i++)//(OUTPUT in 1 + x + x^2 + x^3 ...)
              res += ans[i];
            printf("%lld\n", res);
     }
