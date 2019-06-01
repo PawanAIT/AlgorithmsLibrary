@@ -2,42 +2,28 @@
 using namespace std;
 class Solution {
 public:
-	vector<int> searchRange(vector<int>& nums, int target) {
-		vector<int>v{ -1,-1 };
-		if (nums.size() == 0)
-			return v;
-		int low = 0, high = nums.size();
-		while (low < high) {
-			int mid = (low + high) >> 1;
-			if (nums[mid] < target) {
-				low = mid + 1;
+	vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
+		sort(
+			people.begin(), people.end(),
+			[](vector<int> & a, vector<int> & b) {
+				if (a[0] != b[0])
+					return a[0] > b[0];
+				return a[1] < b[1];
 			}
-			else {
-				high = mid;
-			}
+		);
+		vector<vector<int>> ans;
+		for (auto x : people) {
+			ans.insert(ans.begin() + x[1], x);
 		}
-
-		if (low == nums.size() || nums[low] != target)
-			return v;
-		v[0] = low;
-
-		low = 0, high = nums.size();
-		while (low < high) {
-			int mid = low + high >> 1;
-			if (nums[mid] <= target)
-				low = mid + 1;
-			else
-				high = mid;
-		}
-		v[1] = low - 1;
-		return v;
+		return ans;
 	}
 };
+
 int main() {
 	Solution solution;
 	int target = 0;
-	vector<int> v{0};
+	vector<vector<int>> v{ {7, 0}, {4, 4}, {7, 1}, {5, 0}, {6, 1}, {5, 2} };
 	
-	for (auto i : solution.searchRange(v, 0))
-		cout << i;
+	for (auto i : solution.reconstructQueue(v))
+		cout << i[0] << i[1] << endl;
 }
