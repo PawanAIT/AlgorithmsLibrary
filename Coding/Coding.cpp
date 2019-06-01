@@ -2,32 +2,31 @@
 using namespace std;
 class Solution {
 public:
-	vector<string> ans;
-	vector<string> generateParenthesis(int n) {
-		int l(n), r(n);
-		string s = "";
-		generate(l, r, s);
+	vector<vector<int>> ans;
+	vector<vector<int>> subsets(vector<int>& nums) {
+		vector<int> sub;
+		generate(nums,sub ,0);
 		return ans;
 	}
-	void generate(int l, int r, string s) {
-		if (l == 0 and r == 0) {
-			ans.push_back(s);
+	void generate(vector<int>& v, vector<int>& sub, int index) {
+		if (index == v.size()) {
+			ans.push_back(sub);
+			return;
 		}
-		if (l <= r) {
-			if (l) {
-				generate(l - 1, r, s + '(');
-			}
-
-			if (r) {
-				generate(l, r - 1, s + ')');
-			}
-		}
+		sub.push_back(v[index]);
+		generate(v, sub, index + 1);
+		sub.pop_back();
+		generate(v, sub, index + 1);
 	}
 };
 
 int main() {
 	Solution solution;
-	for (auto i : solution.generateParenthesis(3)) {
-		cout << i << endl;
-	}		
+	vector<int> v{1, 2, 3};
+	for (auto i : solution.subsets(v)) {
+		for (auto j : i)
+			cout << j << " ";
+		cout << endl;
+	}
+		
 }
