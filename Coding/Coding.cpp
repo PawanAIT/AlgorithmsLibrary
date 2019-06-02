@@ -3,27 +3,28 @@ using namespace std;
 class Solution {
 public:
 	vector<vector<int>> ans;
-	vector<vector<int>> subsets(vector<int>& nums) {
-		vector<int> sub;
-		generate(nums,sub ,0);
+	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+		vector<int> sol;
+		generate(candidates, sol, target, 0 );
 		return ans;
 	}
-	void generate(vector<int>& v, vector<int>& sub, int index) {
-		if (index == v.size()) {
-			ans.push_back(sub);
+	void generate(vector<int>& candidate, vector<int>& sol, int target, int index) {
+		if (target == 0)
+			ans.push_back(sol);
+		if (target < 0)
 			return;
-		}
-		sub.push_back(v[index]);
-		generate(v, sub, index + 1);
-		sub.pop_back();
-		generate(v, sub, index + 1);
+		for (int i = index; i < candidate.size(); i++) {
+			sol.push_back(candidate[i]);
+			generate(candidate, sol, target - candidate[i], i);
+			sol.pop_back();
+		}	
 	}
 };
 
 int main() {
 	Solution solution;
-	vector<int> v{1, 2, 3};
-	for (auto i : solution.subsets(v)) {
+	vector<int> v{ 2,3,6,7 };
+	for (auto i : solution.combinationSum(v, 7)) {
 		for (auto j : i)
 			cout << j << " ";
 		cout << endl;
