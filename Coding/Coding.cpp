@@ -3,28 +3,36 @@ using namespace std;
 class Solution {
 public:
 	vector<vector<int>> ans;
-	vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-		vector<int> sol;
-		generate(candidates, sol, target, 0 );
+	vector<vector<int>> permuteUnique(vector<int>& nums) {
+		map<int, int> mapit;
+		for (auto i : nums) {
+			mapit[i]++;
+		}
+		vector<int> val;
+		permuteit(nums, mapit, val);
 		return ans;
 	}
-	void generate(vector<int>& candidate, vector<int>& sol, int target, int index) {
-		if (target == 0)
-			ans.push_back(sol);
-		if (target < 0)
+	void permuteit(vector<int>& nums, map<int,int>& v, vector<int>& val) {
+		if (val.size() == nums.size()) {
+			ans.push_back(val);
 			return;
-		for (int i = index; i < candidate.size(); i++) {
-			sol.push_back(candidate[i]);
-			generate(candidate, sol, target - candidate[i], i);
-			sol.pop_back();
-		}	
+		}
+		for (auto &i : v) {
+			if (i.second > 0) {
+				val.push_back(i.first);
+				i.second--;
+				permuteit(nums, v, val);
+				i.second++;
+				val.pop_back();
+			}
+		}
 	}
 };
 
 int main() {
 	Solution solution;
-	vector<int> v{ 2,3,6,7 };
-	for (auto i : solution.combinationSum(v, 7)) {
+	vector<int> v{ 1,1,2 };
+	for (auto i : solution.permuteUnique(v)) {
 		for (auto j : i)
 			cout << j << " ";
 		cout << endl;
