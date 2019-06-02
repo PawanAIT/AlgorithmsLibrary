@@ -2,40 +2,47 @@
 using namespace std;
 class Solution {
 public:
-	vector<vector<int>> ans;
-	vector<vector<int>> permuteUnique(vector<int>& nums) {
-		map<int, int> mapit;
-		for (auto i : nums) {
-			mapit[i]++;
-		}
-		vector<int> val;
-		permuteit(nums, mapit, val);
+	vector<int> BIT;
+	int get(int pos) {
+		int ans = 0;
+		for (; pos > 0; pos -= pos & -pos)
+			ans += BIT[pos];
 		return ans;
 	}
-	void permuteit(vector<int>& nums, map<int,int>& v, vector<int>& val) {
-		if (val.size() == nums.size()) {
-			ans.push_back(val);
-			return;
+	void add(int pos) {
+		for (; pos < BIT.size(); pos += pos & -pos) {
+			BIT[pos]++;
 		}
-		for (auto &i : v) {
-			if (i.second > 0) {
-				val.push_back(i.first);
-				i.second--;
-				permuteit(nums, v, val);
-				i.second++;
-				val.pop_back();
-			}
+	}
+	vector<int> countSmaller(vector<int> & nums) {
+		vector<int> ans(nums.size());
+		// coordinate compression
+		map<int, int> map;
+		set<int>s;
+		s.insert(nums.begin(), nums.end());
+		int counter = 1;
+		for (auto& i : s) {
+			map[i] = counter++;
 		}
+		// coordinate compression
+		BIT.resize(nums.size() + 5);
+
+		for (int i = nums.size() - 1; i >= 0; i--) {
+			ans[i] = get(map[nums[i]] - 1); //getting the compressed value.
+			add(map[nums[i]]);
+		}
+		return ans;
 	}
 };
 
 int main() {
 	Solution solution;
-	vector<int> v{ 1,1,2 };
-	for (auto i : solution.permuteUnique(v)) {
-		for (auto j : i)
-			cout << j << " ";
-		cout << endl;
+	vector<int> v{ 5,2,6,1 };
+	//solution.countSmaller(v);
+	for (auto i : solution.countSmaller(v)) {
+		//for (auto j : i)
+			cout << i << " ";
+		//cout << endl;
 	}
-		
+
 }
