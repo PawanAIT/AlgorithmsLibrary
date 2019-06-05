@@ -1,48 +1,39 @@
 #include "bits/stdc++.h"
 using namespace std;
-class Solution {
-public:
-	vector<int> BIT;
-	int get(int pos) {
-		int ans = 0;
-		for (; pos > 0; pos -= pos & -pos)
-			ans += BIT[pos];
-		return ans;
+const int N = 1e5 + 5;
+int arr[N];
+int par[N], Size[N];
+int dad(int p) {
+	if (p != par[p])
+		return par[p] = dad(par[p]);
+	return p;
+}
+void Union(int x, int y) {
+	int parx = dad(x);
+	int pary = dad(y);
+	if (parx != pary) {
+		par[parx] = pary;
+		Size[pary] += Size[parx];
 	}
-	void add(int pos) {
-		for (; pos < BIT.size(); pos += pos & -pos) {
-			BIT[pos]++;
-		}
-	}
-	vector<int> countSmaller(vector<int> & nums) {
-		vector<int> ans(nums.size());
-		// coordinate compression
-		map<int, int> map;
-		set<int>s;
-		s.insert(nums.begin(), nums.end());
-		int counter = 1;
-		for (auto& i : s) {
-			map[i] = counter++;
-		}
-		// coordinate compression
-		BIT.resize(nums.size() + 5);
-
-		for (int i = nums.size() - 1; i >= 0; i--) {
-			ans[i] = get(map[nums[i]] - 1); //getting the compressed value.
-			add(map[nums[i]]);
-		}
-		return ans;
-	}
-};
-
+}
 int main() {
-	Solution solution;
-	vector<int> v{ 5,2,6,1 };
-	//solution.countSmaller(v);
-	for (auto i : solution.countSmaller(v)) {
-		//for (auto j : i)
-			cout << i << " ";
-		//cout << endl;
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; i++) {
+		cin >> arr[i];
+		par[i] = i;
+		Size[i] = 1;
 	}
-
+	for (int i = 1; i <= n; i++) {
+		Union(arr[i], i);
+	}
+	set<int> s;
+	for (int i = 1; i <= n; i++)
+		s.insert(dad(i));
+	long long ans = 0;
+	for (auto& i : s) {
+		ans += Size[i] - 1;
+	}
+	printf("%lld\n", ans);
+	return 0;
 }
