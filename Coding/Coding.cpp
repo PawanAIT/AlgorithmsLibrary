@@ -1,51 +1,37 @@
 #include "bits/stdc++.h"
 using namespace std;
+const int N = 1000 + 5;
+int dp[N][N];
 class Solution {
 public:
-	int Binary_search(vector<int>& v, int low, int high, int target) {
-		while (low <= high) {
-			int mid = low + high >> 1;
-			if (v[mid] == target) {
-				return mid;
-			}
-			if (v[mid] < target) {
-				low = mid + 1;
-			}
-			else {
-				high = mid - 1;
+	int Knapsack(vector<int>& weight, vector<int>& values, int capacity) {
+		memset(dp, 0, N * N);
+		for (int i = 1; i <= weight.size(); i++) {
+			for (int j = 1; j <= capacity; j++) {
+				if (j >= weight[i - 1])
+					dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weight[i - 1]] + values[i - 1]);
+				else
+					dp[i][j] = dp[i - 1][j];
 			}
 		}
-		return -1;
-	}
-	int search(vector<int>& nums, int target) {
-		int low = 0, high = nums.size() - 1;
-		while (low <= high) {
-			int mid = (low + high) / 2;
-			if (nums[mid] == target)
-				return mid;
-			if (nums[low] <= nums[mid]) {
-				if (target >= nums[low] && target <= nums[mid])
-					return Binary_search(nums, low, mid, target);
-				else {
-					low = mid + 1;
-				}
-			}
-			else {
-				if (target >= nums[mid] && target <= nums[high]) {
-					return Binary_search(nums, mid, high, target);
-				}
-				else {
-					high = mid - 1;
-				}
-			}
-		}
-		return -1;
+		return dp[weight.size()][capacity];
 	}
 };
 int main() {
-	Solution solution;
-	vector<int>	v{ 4,5,6,7,0,1,2 };
-	cout << solution.search(v, 3);
 
+	int t;
+	cin >> t;
+	while (t--) {
+		Solution solution;
+		int n, capacity;
+		cin >> n >> capacity;
+		vector<int>	weight(n);
+		vector<int>	values(n);
+		for (auto& i : values)
+			cin >> i;
+		for (auto& i : weight)
+			cin >> i;
+		cout << solution.Knapsack(weight, values, capacity);
+	}
 	return 0;
 }
