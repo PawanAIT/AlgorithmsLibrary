@@ -7,26 +7,29 @@ const int N = 1000 + 5;
 int dp[N][N];
 class Solution {
 public:
-	int minDistance(string word1, string word2) {
-		memset(dp, 0, N * N);
-		for (int i = 1; i <= word1.size(); i++) {
-			for (int j = 1; j <= word2.size(); j++) {
-				if (word1[i - 1] == word2[j - 1]) {
-					dp[i][j] = 1 + dp[i - 1][j - 1];
-				}
-				else {
-					dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
-				}
-			}
+	int MatrixChainOrder(int p[] , int i , int j) {
+		
+		if (i == j) {
+			return 0;
 		}
-		return word1.size() + word2.size() - 2 * dp[word1.size()][word2.size()];
+		if (dp[i][j] != 0) {
+			return dp[i][j];
+		}
+		int MinVal = INT_MAX;
+		for (int k = i; k < j; k++) {
+			int curVal = MatrixChainOrder(p, i, k) + MatrixChainOrder(p, k + 1, j) + p[i - 1] * p[k] * p[j];
+			MinVal = min(MinVal, curVal);
+		}
+		return dp[i][j] = MinVal;
 	}
 };
 int main() {
 	freopen("input.txt","r+", stdin);
 	Solution solution;
-	string word1, word2;
-	cin >> word1 >> word2;
-	cout << solution.minDistance(word1, word2);
+	int arr[] = { 1, 2, 3, 4, 3 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+
+	cout << "Minimum number of multiplications is "
+		<< solution.MatrixChainOrder(arr, 1, n - 1);
 	return 0;
 }
