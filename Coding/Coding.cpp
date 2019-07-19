@@ -1,35 +1,47 @@
-// https://leetcode.com/problems/delete-operation-for-two-strings/
 #include "bits/stdc++.h"
 #pragma warning(disable:4996)
 
 using namespace std;
-const int N = 1000 + 5;
-int dp[N][N];
-class Solution {
+
+class BinaryTree {
+private:
+	int val;
+	BinaryTree* left;
+	BinaryTree* right;
 public:
-	int MatrixChainOrder(int p[] , int i , int j) {
-		
-		if (i == j) {
-			return 0;
+	BinaryTree* insert(BinaryTree* root, int data) {
+		if (root == NULL) {
+			BinaryTree* x = new BinaryTree();
+			x->val = data;
+			return x;
 		}
-		if (dp[i][j] != 0) {
-			return dp[i][j];
+		if (root->val > data) {
+			 root->left = insert(root->left, data);
 		}
-		int MinVal = INT_MAX;
-		for (int k = i; k < j; k++) {
-			int curVal = MatrixChainOrder(p, i, k) + MatrixChainOrder(p, k + 1, j) + p[i - 1] * p[k] * p[j];
-			MinVal = min(MinVal, curVal);
+		else {
+			 root->right = insert(root->right, data);
 		}
-		return dp[i][j] = MinVal;
+		return root;
+	}
+
+	void inorder(BinaryTree* root) {
+		if (root == NULL)
+			return;
+		inorder(root->left);
+		cout << root->val << " ";
+		inorder(root->right);
 	}
 };
-int main() {
-	freopen("input.txt","r+", stdin);
-	Solution solution;
-	int arr[] = { 1, 2, 3, 4, 3 };
-	int n = sizeof(arr) / sizeof(arr[0]);
 
-	cout << "Minimum number of multiplications is "
-		<< solution.MatrixChainOrder(arr, 1, n - 1);
+int main() {
+	BinaryTree b, *x = NULL;
+	x = b.insert(x ,5);
+	b.insert(x ,12);
+	b.insert(x ,56);
+	b.insert(x ,7);
+	b.insert(x ,0);
+
+	b.inorder(x);
+
 	return 0;
 }
