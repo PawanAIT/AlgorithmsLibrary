@@ -5,57 +5,54 @@ const int N = 100;
 vector<int> adj[N];
 int visited[N];
 
-enum { WHITE, GREY, BLACK };
+const int N = 105;
+int visited[N];
 
-bool CheckCycle(int p) {
-	visited[p] = GREY;
+bool CheckCycle(int p, vector<int> adj[], int par) {
+	visited[p] = 1;
 
 	for (auto i : adj[p]) {
 
-		if (visited[i] == GREY)
+		if (i == par)continue;
+
+		if (visited[i])
 			return true;
 
-		if (visited[i] == WHITE and CheckCycle(i))
+		if (!visited[i] and CheckCycle(i, adj, p))
 			return true;
 	}
-
-	visited[p] = BLACK;
 	return false;
 }
-
-int main() {
-	//freopen("input.txt", "r+", stdin);
-	
-	int nodes, edges;
-	cin >> nodes >> edges;
-	for (int i = 0; i < edges; i++) {
-		int u, v;
-		cin >> u >> v;
-		adj[u].push_back(v);
-	}
-
+bool isCyclic(vector<int> adj[], int V)
+{
 	bool cycleInGraph = false;
-
-	for (int i = 1; i <= nodes; i++) {
-		if (visited[i] == WHITE) {
-			if (CheckCycle(i))
+	memset(visited, 0, sizeof(visited));
+	for (int i = 0; i < V; i++) {
+		if (!visited[i]) {
+			if (CheckCycle(i, adj, -1))
 				cycleInGraph = true;
 		}
 	}
-
-	cout << (cycleInGraph ? "Cycle" : "No Cycle");
-	
-	return 0;
+	return cycleInGraph;
 }
 
-/*
-6
-7
-1 2
-2 3
-1 3
-4 1
-4 5
-5 6
-6 4
-*/
+int main()
+{
+	int T;
+	cin >> T;
+	while (T--)
+	{
+		int V, E;
+		cin >> V >> E;
+		int u, v;
+		for (int i = 0; i < E; i++)
+		{
+			cin >> u >> v;
+
+			// adding edge to the graph
+			adj[u].push_back(v);
+			adj[v].push_back(u);
+		}
+		cout << isCyclic(adj, V) << endl;
+	}
+}
