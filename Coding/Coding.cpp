@@ -1,24 +1,18 @@
-#include "bits/stdc++.h"
-using namespace std;
-const int N = 1000;
-int dp[N][N];
-int EggDropping(int Floors, int Eggs){
-	if(Eggs == 1)
-		return Floors;
-	if(Floors <= 1)
-		return Floors;
-	
-	if(dp[Floors][Eggs] != 0)
-		return dp[Floors][Eggs];
-	int ans = INT_MAX;
-	for(int i = 1; i <= Floors; i++){
-		int x = max(1 + EggDropping(Floors - i, Eggs) , 1 + EggDropping(i - 1 , Eggs - 1));
-		ans = min(ans , x);
+
+class Solution {
+public:
+	int d = 0;
+	int ans(TreeNode* root) {
+		if (root == NULL)
+			return 0;
+		int l = ans(root->left);
+		int r = ans(root->right);
+		d = max(d, l + r);
+		return 1 + max(l, r);
 	}
-	dp[Floors][Eggs] = ans;
-	return ans;
-}
-int main() {
-	cout << EggDropping(100 , 2);
-	return 0;
-}
+	int diameterOfBinaryTree(TreeNode* root) {
+		d = 0;
+		ans(root);
+		return d;
+	}
+};
