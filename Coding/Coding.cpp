@@ -1,17 +1,16 @@
-Node* p = NULL;
 bool f = true;
-void check(Node* root) {
+int ans(Node* root) {
 	if (root == NULL)
-		return;
-	check(root->left);
-	if (p != NULL && p->data > root->data)
+		return 0;
+	int l = ans(root->left);
+	int r = ans(root->right);
+	if (abs(l - r) > 1)
 		f = false;
-	p = root;
-	check(root->right);
+	return 1 + max(l, r);
 }
-bool isBST(Node* root) {
+bool isBalanced(Node* root)
+{
 	f = true;
-	p = NULL;
-	check(root);
+	ans(root);
 	return f;
 }
