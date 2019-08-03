@@ -1,58 +1,58 @@
 #include "bits/stdc++.h"
 #pragma warning(disable:4996)
 using namespace std;
-const int N = 100;
-vector<int> adj[N];
-int visited[N];
+class Node {
+public:
+	int val;
+	Node* left;
+	Node* right;
+	Node* next;
 
-const int N = 105;
-int visited[N];
+	Node() {}
 
-bool CheckCycle(int p, vector<int> adj[], int par) {
-	visited[p] = 1;
-
-	for (auto i : adj[p]) {
-
-		if (i == par)continue;
-
-		if (visited[i])
-			return true;
-
-		if (!visited[i] and CheckCycle(i, adj, p))
-			return true;
+	Node(int _val, Node* _left, Node* _right, Node* _next) {
+		val = _val;
+		left = _left;
+		right = _right;
+		next = _next;
 	}
-	return false;
-}
-bool isCyclic(vector<int> adj[], int V)
-{
-	bool cycleInGraph = false;
-	memset(visited, 0, sizeof(visited));
-	for (int i = 0; i < V; i++) {
-		if (!visited[i]) {
-			if (CheckCycle(i, adj, -1))
-				cycleInGraph = true;
+};
+
+class Solution {
+public:
+	Node* findnext(Node* s) {
+		Node* p = s->next;
+		while (p) {
+			if (p->left) return p->left;
+			if (p->right) return p->right;
+			p = p->next;
+		}
+		return NULL;
+	}
+	Node* connect(Node* root) {
+		Node* p = root;
+		while (p) {
+			Node* q = p;
+			while (q) {
+				if (q->left) {
+					if (q->right) {
+						q->left->next = q->right;
+					}
+					else {
+						q->left->next = findnext(q);
+					}
+				}
+				if (q->right) {
+					q->right->next = findnext(q);
+				}
+
+				q = q->next;
+			}
+			if (p->left)
+				p = p->left;
+			else if (p->right)
+				p = p->right;
+			else p = findnext(p);
 		}
 	}
-	return cycleInGraph;
-}
-
-int main()
-{
-	int T;
-	cin >> T;
-	while (T--)
-	{
-		int V, E;
-		cin >> V >> E;
-		int u, v;
-		for (int i = 0; i < E; i++)
-		{
-			cin >> u >> v;
-
-			// adding edge to the graph
-			adj[u].push_back(v);
-			adj[v].push_back(u);
-		}
-		cout << isCyclic(adj, V) << endl;
-	}
-}
+};
