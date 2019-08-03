@@ -1,128 +1,66 @@
-#include "bits/stdc++.h"
-#pragma warning(disable:4996)
+//https://leetcode.com/problems/minimum-window-substring/
 
+#include "bits/stdc++.h"
+#include "Coding.h"
+#pragma warning(disable:4996)
 using namespace std;
 
-class Node {
-private:
-	int data;
-	Node* left;
-	Node* right;
-public:
-	Node* insert(Node* root, int data) {
-		if (root == NULL) {
-			Node* x = new Node();
-			x->data = data;
-			return x;
-		}
-		if (root->data > data) {
-			 root->left = insert(root->left, data);
-		}
-		else {
-			 root->right = insert(root->right, data);
-		}
-		return root;
-	}
+const int MaxHashSize = 257;
 
-	void inorder(Node* root) {
-		if (root == NULL)
-			return;
-		inorder(root->left);
-		cout << root->data << " ";
-		inorder(root->right);
-	}
+bool IsCornerCase(string& text, string& pattern) {
+	if (text.size() < pattern.size()) // pattern is bigger than text itself
+		return true;
+	
+	if (pattern == "" || text == "")
+		return true;
 
-	int sumOfLeafNodes(Node* root) {
-		if (root == NULL) {
-			return 0;
+	return false;
+}
+
+string minWindow(string text, string pattern) {
+	if (IsCornerCase(text,pattern))
+		return "";
+
+	int patternHash[MaxHashSize] = {0};
+	int rollingHash[MaxHashSize] = {0};
+
+	for (auto& i : pattern) // count rakh lo poore pattern ka.
+		patternHash[i]++;
+
+	int leftptr = 0;
+	int kitteCharacterPatternMeinAaye = 0;
+	int MinStartIndex = 0, MinEndIndex = INT_MAX;
+
+	for (int i = 0; i < text.size(); i++) {
+		char ch = text[i];
+		 
+		rollingHash[ch]++;
+
+		if (patternHash[ch] != 0 and rollingHash[ch] <= patternHash[ch]) { // koi character , jo pattern mein aaya ho , magar uske recurrence se jyada ho to count mat karo.
+			kitteCharacterPatternMeinAaye++;
 		}
-		if (root->left == NULL and root->right == NULL)
-			return root->data;
 
-		int leftSum = sumOfLeafNodes(root->left);
-		int rightSum = sumOfLeafNodes(root->right);
-		return leftSum + rightSum;
-	}
-
-	int Morris(Node* root) {
-		Node* cur = root;
-		while (cur != NULL) {
-			if (cur->left == NULL) {
-				cout << cur->data << " ";
-				cur = cur->right;
+		if (kitteCharacterPatternMeinAaye == pattern.size()) { // window mili , magar minimum nahi hai.
+			char ch = text[leftptr];
+			while (rollingHash[ch] > patternHash[ch] || patternHash[ch] == 0) { // window choti karo , jabtak pattern ke characters se jyada hai.
+				rollingHash[ch]--;
+				leftptr++;
+				ch = text[leftptr];
 			}
-			else {
-				Node* p = cur->left;
-				while (p->right != NULL and p->right != cur)
-					p = p->right;
-				if (p->right == cur) {
-					p->right = NULL;
-					cout << cur->data << " "; // Inorder
-					cur = cur->right;
-				}
-				else {
-					//cout << cur -> data << " "; // Preorder
-					p->right = cur;
-					cur = cur->left;
-				}
+			if (MinEndIndex - MinStartIndex > i - leftptr) { // sabse min window utha lo.
+				MinStartIndex = leftptr;
+				MinEndIndex = i;
 			}
 		}
 	}
-
-	Node* SetPredAndDetachLink(Node* cur) {
-		Node* p = cur->left;
-		while (p->right != NULL and p->right != cur) {
-			p = p->right;
-		}
-		if (p ->right != cur) {
-			p->right = cur;
-			return p;
-		}
-		else {
-			p->right = NULL;
-			return cur;
-		}
-	}
-
-	void MorrisTraversal(Node* cur) {
-		while (cur != NULL) {
-			if (cur->left == NULL) {
-				cout << cur->data << " ";
-				cur = cur->right;
-			}
-			else {
-				Node* temp = SetPredAndDetachLink(cur);
-				if (temp == cur) {
-					cout << cur->data << " ";
-					cur = cur->right;
-				}
-				else {
-					cur = cur->left;
-				}
-			}
-		}
-	}
-};
+	
+	if (kitteCharacterPatternMeinAaye != pattern.size())
+		return "";
+	int len = MinEndIndex - MinStartIndex + 1;
+	return text.substr(MinStartIndex, len);
+}
 
 int main() {
-	Node b, *x = NULL;
-	x = b.insert(x ,7);
-	b.insert(x ,4);
-	b.insert(x ,10);
-	b.insert(x ,5);
-	b.insert(x ,6);
-	b.insert(x ,2);
-	b.insert(x ,3);
-	b.insert(x ,1);
-	b.insert(x ,8);
-	b.insert(x ,9);
-	b.insert(x ,11);
-
-	//b.inorder(x);
-
-	b.MorrisTraversal(x);
-	cout << endl;
-	b.MorrisTraversal(x);
-
+	cout << minWindow("ADOBECODEBANC", "ABC");
 	return 0;
 }
