@@ -1,21 +1,53 @@
+#include "bits/stdc++.h"
+#pragma warning(disable:4996)
+using namespace std;
+struct TreeNode {
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+
+};
+
 class Solution {
 public:
-	vector<vector<int>> ans;
-	vector<int>temp;
-	void solve(TreeNode* root, int sum) {
-		if (root == NULL)
-			return;
-		sum -= root->val;
-		temp.push_back(root->val);
-		if (sum == 0 && !(root->left) && !(root->right)) {
-			ans.push_back(temp);
-		}
-		solve(root->left, sum);
-		solve(root->right, sum);
-		temp.pop_back();
-	}
-	vector<vector<int>> pathSum(TreeNode* root, int sum) {
-		solve(root, sum);
+	vector<int> ans;
+	vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {
+		dfs(root, target, K);
 		return ans;
+	}
+	void addnodes(TreeNode* root, int k) {
+		if (root == NULL || k < 0)
+			return;
+		if (k == 0)
+			ans.push_back(root->val);
+		addnodes(root->left, k - 1);
+		addnodes(root->right, k - 1);
+	}
+
+	int dfs(TreeNode* root, TreeNode* target, int K) {
+		if (root == NULL)
+			return -1;
+		if (root == target) {
+			addnodes(root, K);
+			return 1;
+		}
+		int L = dfs(root->left, target, K);
+		int R = dfs(root->right, target, K);
+		if (L != -1) {
+			if (L == K) {
+				ans.push_back(root->val);
+			}
+			addnodes(root->right, K - L - 1);
+			return L + 1;
+		}
+		if (R != -1) {
+			if (R == K) {
+				ans.push_back(root->val);
+			}
+			addnodes(root->left, K - R - 1);
+			return R + 1;
+		}
+		return -1;
 	}
 };
