@@ -2,42 +2,35 @@
 #pragma warning(disable:4996)
 using namespace std;
 
-void heapify(int arr[], int i, int n) {
-	int left = 2 * i;
-	int right = 2 * i + 1;
-	
-	int largest = i;
+// https://leetcode.com/problems/shortest-palindrome/
 
-	if (left <= n && arr[largest] < arr[left]) {
-		largest = left;
+int getPrefixSuffix(string &s) {
+	int f[10000 + 5] = { 0 };
+	int n = s.size();
+	int i = 0, j = 1;
+	while (j < n) {
+		if (s[i] == s[j]) {
+			f[j] = i + 1;
+			i++, j++;
+		}
+		else if (i == 0)
+			j++;
+		else
+			i = f[i - 1];
 	}
-	if (right <= n && arr[largest] < arr[right]) {
-		largest = right;
-	}
-
-	if (largest != i) {
-		swap(arr[largest], arr[i]);
-		heapify(arr, largest, n);
-	}
+	return f[n - 1];
 }
-
-void heapsort(int arr[], int n) {
-	for (int i = n / 2; i > 0; i--) {
-		heapify(arr, i, n);
-	}
-	while (n > 1)
-	{
-		swap(arr[1], arr[n]);
-		n--;
-		heapify(arr, 1, n);
-	}
+string shortestPalindrome(string &s) {
+	string rev = s;
+	reverse(rev.begin(), rev.end());
+	string ans = s + '#' + rev;
+	int charToadd = getPrefixSuffix(ans);
+	return rev.substr(0, s.size() - charToadd) + s;
 }
 int main() {
-	int arr[] = {-1, 4,2,9,1,3,5,6,2,0,11,34};
-	heapsort(arr, 11);
-
-	for (int i = 1; i < 12; i++)
-		cout << arr[i] << " ";
+	string s;
+	cin >> s;
+	cout << shortestPalindrome(s);
 	return 0;
 }
 
@@ -51,4 +44,15 @@ int main() {
 4 5
 5 6
 6 4
+
+
+"abcd"
+"dcba"
+
+
+"cbaabcd"
+
+
+"dcbabcd"
+
 */
