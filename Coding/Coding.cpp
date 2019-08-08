@@ -1,53 +1,43 @@
 #include "bits/stdc++.h"
-#include "CODING.H"
 #pragma warning(disable:4996)
 using namespace std;
-const int N = 100;
-vector<int> adj[N];
-int indegree[N];
-vector<int> TopoOrdering;
 
-void topo(int nodes) {
-	for (int i = 1; i <= nodes; i++) { 
-		for (auto v : adj[i])
-			indegree[v]++;
+void heapify(int arr[], int i, int n) {
+	int left = 2 * i;
+	int right = 2 * i + 1;
+	
+	int largest = i;
+
+	if (left <= n && arr[largest] < arr[left]) {
+		largest = left;
 	}
-	queue<int> q;
-	for (int i = 1; i <= nodes; i++) {
-		if (indegree[i] == 0) {
-			q.push(i);
-		}
+	if (right <= n && arr[largest] < arr[right]) {
+		largest = right;
 	}
-	while (!q.empty()) {
-		int u = q.front(); q.pop();
-		TopoOrdering.push_back(u);
-		for (auto v : adj[u]) {
-			indegree[v]--;
-			if (indegree[v] == 0)
-				q.push(v);
-		}
+
+	if (largest != i) {
+		swap(arr[largest], arr[i]);
+		heapify(arr, largest, n);
 	}
 }
 
-void addEdge(int x, int y) {
-	x++, y++;
-	adj[x].push_back(y);
+void heapsort(int arr[], int n) {
+	for (int i = n / 2; i > 0; i--) {
+		heapify(arr, i, n);
+	}
+	while (n > 1)
+	{
+		swap(arr[1], arr[n]);
+		n--;
+		heapify(arr, 1, n);
+	}
 }
-
 int main() {
-	addEdge(5, 2);
-	addEdge(5, 0);
-	addEdge(4, 0);
-	addEdge(4, 1);
-	addEdge(2, 3);
-	addEdge(3, 1);
+	int arr[] = {-1, 4,2,9,1,3,5,6,2,0,11,34};
+	heapsort(arr, 11);
 
-	topo(6);
-
-	for (auto i : TopoOrdering) {
-		cout << i - 1 << " ";
-	}
-
+	for (int i = 1; i < 12; i++)
+		cout << arr[i] << " ";
 	return 0;
 }
 
