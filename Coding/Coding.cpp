@@ -2,40 +2,28 @@
 #include <vector>
 #include <queue>
 using namespace std;
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+struct ListNode {
+	int val;
+	ListNode* next;
+	ListNode(int x) : val(x), next(NULL) {}
 };
- 
+
 class Solution {
 public:
-	vector<vector<int>> levelOrder(TreeNode* root) {
-		vector<vector<int>> ans;
-		vector<int> temp;
-		if (root == NULL)
-			return ans;
-		queue<TreeNode*> Q;
-		Q.push(root);
-		Q.push(NULL);
-		while (!Q.empty()) {
-			auto top = Q.front(); Q.pop();
-			if (top == NULL) {
-				ans.push_back(temp);
-				temp.clear();
-				if (Q.size() > 0) {
-					Q.push(NULL);
-				}
-			}
-			else {
-				temp.push_back(top->val);
-				if (top->left)
-					Q.push(top->left);
-				if (top->right)
-					Q.push(top->right);
-			}
+	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+		if (l1 == NULL)
+			return l2;
+		if (l2 == NULL)
+			return l1;
+		ListNode* Temp = NULL;
+		if (l1->val < l2->val) {
+			Temp = l1;
+			Temp ->next = mergeTwoLists(l1->next, l2);
 		}
-		return ans;
+		else {
+			Temp = l2;
+			Temp ->next = mergeTwoLists(l1, l2->next);
+		}
+		return Temp;
 	}
 };
