@@ -2,28 +2,22 @@
 #include <vector>
 #include <queue>
 using namespace std;
-struct ListNode {
-	int val;
-	ListNode* next;
-	ListNode(int x) : val(x), next(NULL) {}
-};
-
 class Solution {
 public:
-	ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
-		if (l1 == NULL)
-			return l2;
-		if (l2 == NULL)
-			return l1;
-		ListNode* Temp = NULL;
-		if (l1->val < l2->val) {
-			Temp = l1;
-			Temp ->next = mergeTwoLists(l1->next, l2);
+	int dp[500];
+	int dfs(int n) {
+		if (n == 0)
+			return 1;
+		if (dp[n]) {
+			return dp[n];
 		}
-		else {
-			Temp = l2;
-			Temp ->next = mergeTwoLists(l1, l2->next);
+		int ans = 0;
+		for (int i = 1; i <= n; i++) {
+			ans += dfs(i - 1) * dfs(n - i);
 		}
-		return Temp;
+		return dp[n] = ans;
+	}
+	int numTrees(int n) {
+		return dfs(n);
 	}
 };
