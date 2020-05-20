@@ -1,0 +1,36 @@
+#include<stdio.h>
+int main()
+{
+	int a[30][30],i,j,n,sum=0,sum1=0,row[30],col[30],count=0;
+	scanf("%d",&n);
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+			scanf("%d",&a[i][j]);
+		}
+	}
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+			sum+=a[i][j];
+			sum1+=a[j][i];
+		}
+		row[i]=sum;
+		col[i]=sum1;
+		sum=0;
+		sum1=0;
+	}
+	for(i=0;i<n;i++)
+	{
+		for(j=0;j<n;j++)
+		{
+			if(row[i]<col[j])
+			{
+				count++;
+			}
+		}
+	}
+	printf("%d",count);
+}
