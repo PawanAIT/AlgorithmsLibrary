@@ -1,6 +1,7 @@
 class Solution {
     int N;
-public:
+//private comment
+    public:
     int minSteps(int n) {
         if(n == 1)
             return 0;
