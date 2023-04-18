@@ -1,0 +1,5 @@
+# Ignore g++ generated files
+*.o
+*.out
+*.exe
+*.dSYM/
