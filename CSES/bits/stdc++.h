@@ -31,6 +31,7 @@
 // C
 // flags to compile - g++ -std=c++17 -Wl,-stack_size,0x5000000 2143-Reachability-Queries.cpp -o test.out
 #ifndef _GLIBCXX_NO_ASSERT
+#define LOCAL true
 #include <cassert>
 #endif
 #include <cctype>
