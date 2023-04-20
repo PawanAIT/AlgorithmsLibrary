@@ -120,7 +120,7 @@ bld/
 *.pidb
 *.svclog
 *.scc
-
+*test.cpp
 # Chutzpah Test files
 _Chutzpah*
 
